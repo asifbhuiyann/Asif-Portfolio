@@ -120,7 +120,7 @@ if (contactForm) {
         
         try {
             // IMPORTANT: Replace with your actual Google Apps Script Web App URL
-            const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx39zIurk4PNKbld4tUOYiBGBoZUz_rfc36YBcDpDUMl7-tc-Td5bqyqEjnByAKo7oI/exec';
+            const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxoQxZ-7_bvyacnRtXbCJ9TxPBr_vgxNcFfn3ckmlRFoYxGd61BoBzL0z5GhFNRgXZS/exec';
             
             const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
                 method: 'POST',
