@@ -1,4 +1,3 @@
-// Mobile Navigation Toggle
 const hamburger = document.querySelector('.hamburger');
 const navMenu = document.querySelector('.nav-menu');
 
@@ -87,33 +86,64 @@ fadeElements.forEach(el => {
     fadeObserver.observe(el);
 });
 
-// Contact form handling
+// Contact form handling with Google Sheets integration
 const contactForm = document.getElementById('contactForm');
 if (contactForm) {
-    contactForm.addEventListener('submit', function(e) {
+    contactForm.addEventListener('submit', async function(e) {
         e.preventDefault();
         
         // Get form data
         const formData = new FormData(this);
-        const name = formData.get('name');
-        const email = formData.get('email');
-        const subject = formData.get('subject');
-        const message = formData.get('message');
+        const data = {
+            name: formData.get('name'),
+            email: formData.get('email'),
+            subject: formData.get('subject'),
+            message: formData.get('message')
+        };
         
         // Simple validation
-        if (!name || !email || !subject || !message) {
+        if (!data.name || !data.email || !data.subject || !data.message) {
             showNotification('Please fill in all fields.', 'error');
             return;
         }
         
-        if (!isValidEmail(email)) {
+        if (!isValidEmail(data.email)) {
             showNotification('Please enter a valid email address.', 'error');
             return;
         }
         
-        // Simulate form submission
-        showNotification('Thank you for your message! I\'ll get back to you soon.', 'success');
-        this.reset();
+        // Show loading state
+        const submitButton = this.querySelector('button[type="submit"]');
+        const originalText = submitButton.textContent;
+        submitButton.textContent = 'Sending...';
+        submitButton.disabled = true;
+        
+        try {
+            // IMPORTANT: Replace with your actual Google Apps Script Web App URL
+            const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx39zIurk4PNKbld4tUOYiBGBoZUz_rfc36YBcDpDUMl7-tc-Td5bqyqEjnByAKo7oI/exec';
+            
+            const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+                mode: 'no-cors' // Required for Google Apps Script
+            });
+            
+            // Since no-cors mode is used, we can't read the response
+            // Assume success if no error was thrown
+            showNotification('Thank you for your message! I\'ll get back to you soon.', 'success');
+            this.reset();
+            
+        } catch (error) {
+            showNotification('Sorry, there was an error sending your message. Please try again.', 'error');
+            console.error('Form submission error:', error);
+        } finally {
+            // Restore button state
+            submitButton.textContent = originalText;
+            submitButton.disabled = false;
+        }
     });
 }
 
